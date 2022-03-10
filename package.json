@@ -4,6 +4,10 @@
 	"description": "¡Generador de imagenes para tu bot de Discord!",
 	"main": "./dist/index.js",
 	"typings": "./dist/index.d.ts",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/drgatoxd/image-djs"
+	},
 	"engines": {
 		"node": ">16.6.x"
 	},

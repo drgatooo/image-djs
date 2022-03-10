@@ -15,7 +15,7 @@ class Welcomer {
 	/**
 	 * Crea una nueva tarjeta de bienvenida
 	 */
-	constructor(options?: WelcomerOptions) {
+	constructor(private options?: WelcomerOptions) {
 		this.setup(options);
 	}
 
@@ -170,13 +170,18 @@ class Welcomer {
 	 * Construye la tarjeta de bienvenida
 	 * @param {boolean} [toAttachment] Retorna un MessageAttachment o un Buffer
 	 * @param {string} [attachmentName] Cambia el nombre del MessageAttachment
-	 * @returns {MessageAttachment | Buffer}
+	 * @returns {Promise<MessageAttachment | Buffer>}
 	 */
-	public build(
+	public async build(
 		toAttachment: boolean = true,
 		attachmentName: string = 'welcomecard-drgato'
-	): MessageAttachment | Buffer {
-		if (!this.avatar) throw new Error('Falta un avatar. Usa Welcomer.setAvatar(url)');
+	): Promise<MessageAttachment | Buffer> {
+		if (!this.avatar) {
+			if (typeof this.options.avatarURL != 'string' && !Buffer.isBuffer(this.options.avatarURL))
+				throw new TypeError('El "avatar" debe ser un string o un Buffer');
+
+			this.avatar = await loadImage(this.options.avatarURL);
+		}
 		if (!this.background) throw new Error('Falta un background. Usa Welcomer.setBackground(url)');
 		if (!this.subtitle) throw new Error('Falta un subtitle. Usa Welcomer.setSubtitle(str)');
 		if (!this.username) throw new Error('Falta un username. Usa Welcomer.setUsername(str)');
