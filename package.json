@@ -1,6 +1,6 @@
 {
 	"name": "image-djs",
-	"version": "1.0.0",
+	"version": "1.1.1",
 	"description": "¡Generador de imagenes para tu bot de Discord!",
 	"main": "./dist/index.js",
 	"typings": "./dist/index.d.ts",

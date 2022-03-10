@@ -1,2 +1,3 @@
 import { Welcomer } from './Classes/Welcomer';
-exports.Welcomer = Welcomer;
+export { Welcomer };
+export default { Welcomer };
