@@ -2,9 +2,9 @@ export = Welcomer;
 declare class Welcomer {
     /**
      * Crea una nueva tarjeta de bienvenida
-     * @param {WelcomerOptions} options
+     * @param {WelcomerOptions} [options]
      */
-    constructor(options: WelcomerOptions);
+    constructor(options?: WelcomerOptions);
     /**
      * Configura todos los parametros pasados en el constructor
      * @param {WelcomerOptions} options
@@ -47,11 +47,19 @@ declare class Welcomer {
      */
     setSubtitle(text: string): Welcomer;
     /**
-     * Cambia la fuente de la tarjeta. Importala previamente con canvas
+     * Cambia la fuente del username de la tarjeta. Importala previamente con canvas
      * @param {string} fontName Escribe el nombre de una fuente. Ej: "bold 18px 'Segoe UI'"
      * @returns {Welcomer}
      */
-    setFont(fontName: string): Welcomer;
+    setUserFont(fontName: string): Welcomer;
+    font1: string;
+    /**
+     * Cambia la fuente del subtitulo de la tarjeta. Importala previamente con canvas
+     * @param {string} fontName Escribe el nombre de una fuente. Ej: "bold 18px 'Segoe UI'"
+     * @returns {Welcomer}
+     */
+    setSubtitleFont(fontName: string): Welcomer;
+    font2: string;
     /**
      * Construye la tarjeta de bienvenida
      * @param {boolean} [toAttachment] Retorna un MessageAttachment o un Buffer
@@ -69,6 +77,7 @@ type WelcomerOptions = {
     username: string;
     borderColor?: string;
     subtitle?: string;
-    font?: string;
+    font1?: string;
+    font2?: string;
 };
 import { MessageAttachment } from "discord.js";
