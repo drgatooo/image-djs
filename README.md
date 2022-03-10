@@ -21,4 +21,4 @@ const file = new Welcomer()
 channel.send({ files: [file] });
 ```
 
-> ⚠️ Próximamente más clases
+> ⚠️ Próximamente más clases... Reporta los bugs en el [GitHub](https://github.com/drgatoxd/image-djs/issues) del npm.
