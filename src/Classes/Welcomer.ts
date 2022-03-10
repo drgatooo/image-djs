@@ -16,7 +16,7 @@ class Welcomer {
 	 * Crea una nueva tarjeta de bienvenida
 	 */
 	constructor(private options?: WelcomerOptions) {
-		this.setup(options);
+		if (options) this.setup(options);
 	}
 
 	private background: Image;
