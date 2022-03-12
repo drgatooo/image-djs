@@ -22,4 +22,16 @@ const file = await new Welcomer()
 channel.send({ files: [file] });
 ```
 
+### Ping
+
+```javascript
+const { Ping } = require('image-djs');
+// typescript: import { Ping } from 'image-djs';
+const file = await new Ping()
+	.setIcon('https://i1.sndcdn.com/avatars-twM1pq6gSk4YzN4F-N4zKuw-t500x500.jpg')
+	.build(true, 'ping.png');
+
+channel.send({ files: [file] });
+```
+
 > ⚠️ Próximamente más clases... Reporta los bugs en el [GitHub](https://github.com/drgatoxd/image-djs/issues) del npm.

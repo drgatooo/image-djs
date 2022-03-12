@@ -8,8 +8,9 @@ declare class Welcomer {
     /**
      * Configura todos los parametros pasados en el constructor
      * @param {WelcomerOptions} options
+     * @private
      */
-    _setup(options: WelcomerOptions): Promise<void>;
+    private _setup;
     background: string | Buffer;
     avatar: string | Buffer;
     username: string;
@@ -71,6 +72,7 @@ declare class Welcomer {
 declare namespace Welcomer {
     export { WelcomerOptions };
 }
+import { MessageAttachment } from "discord.js";
 type WelcomerOptions = {
     background: string | Buffer;
     avatarURL: string;
@@ -80,4 +82,3 @@ type WelcomerOptions = {
     font1?: string;
     font2?: string;
 };
-import { MessageAttachment } from "discord.js";
