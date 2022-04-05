@@ -22,6 +22,10 @@ const file = await new Welcomer()
 channel.send({ files: [file] });
 ```
 
+#### Ejemplo:
+
+<img src="https://i.imgur.com/Fa0aWlt.png" height="200px"/>
+
 ### Ping
 
 ```javascript
@@ -33,5 +37,9 @@ const file = await new Ping()
 
 channel.send({ files: [file] });
 ```
+
+#### Ejemplo:
+
+<img src="https://i.imgur.com/zkqoQ3w.png" height="200px"/>
 
 > ⚠️ Próximamente más clases... Reporta los bugs en el [GitHub](https://github.com/drgatoxd/image-djs/issues) del npm.
