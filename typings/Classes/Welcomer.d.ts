@@ -17,6 +17,7 @@ declare class Welcomer {
     borderColor: string;
     subtitle: string;
     font: string;
+    avatarBorderColor: string;
     /**
      * Cambia el fondo de la tarjeta de bienvenida
      * @param {string|Buffer} background Una URL o un Buffer de una imagen. Solo PNG/JPG
@@ -41,6 +42,12 @@ declare class Welcomer {
      * @returns {Welcomer}
      */
     setBorderColor(hex: `#${string}`): Welcomer;
+    /**
+     * Cambia el color de borde del avatar del usuario
+     * @param {`#${string}`} hex Color hex para el borde
+     * @returns {Welcomer}
+     */
+    setAvatarBorderColor(hex: `#${string}`): Welcomer;
     /**
      * Cambia el subtítulo de la tarjeta
      * @param {string} text El subtítulo xd
@@ -78,6 +85,7 @@ type WelcomerOptions = {
     avatarURL: string;
     username: string;
     borderColor?: string;
+    avatarBorderColor?: string;
     subtitle?: string;
     font1?: string;
     font2?: string;

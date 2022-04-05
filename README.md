@@ -13,8 +13,9 @@ const file = await new Welcomer()
 	.setAvatar('https://c.tenor.com/bMJ1lh3r46gAAAAC/pfp.gif')
 	.setBackground('https://i.pinimg.com/736x/33/75/00/33750046310a78fc55914a621c7e0991.jpg')
 	.setBorderColor('#ababab')
-	.setUserFont('52px "Segoe UI"')
-	.setSubtitleFont('32px "Segoe UI"')
+	.setAvatarBorderColor('#ff4546')
+	// .setUserFont('52px "Segoe UI"') | Debes cargar una fuente personalizada con canvas
+	// .setSubtitleFont('32px "Segoe UI"') | Debes cargar una fuente personalizada con canvas
 	.setSubtitle('Bienvenido!')
 	.setUsername('drgato')
 	.build(true, 'welcomer-xd.png');
