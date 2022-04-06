@@ -2,9 +2,7 @@
 
 > ¡Un generador de imágenes para discord.js!
 
-## Ejemplos
-
-### Welcome
+## Welcome
 
 ```javascript
 const { Welcomer } = require('image-djs');
@@ -23,11 +21,37 @@ const file = await new Welcomer()
 channel.send({ files: [file] });
 ```
 
-#### Ejemplo:
+### Ejemplo:
 
 <img src="https://i.imgur.com/Fa0aWlt.png" height="200px"/>
 
-### Ping
+## Rank card
+
+```javascript
+const { Rank } = require('image-djs');
+// typescript: import { Rank } from 'image-djs';
+
+const file = await new Rank()
+	.setAvatar(user.displayAvatarURL({ format: 'png' }))
+	.setBackground('https://i.pinimg.com/originals/0a/1b/73/0a1b7398d03982682d8884cba21f6eb6.jpg')
+	.setAvatarRoundType('rounded square')
+	.setBoxColor('#292a36')
+	.setLevel(2)
+	.setRank(1)
+	.setRequiredXP(150)
+	.setTextXPNeeded('{current}/{needed} xp')
+	.setUsername('drgato.ml')
+	.setXP(120)
+	.buildImage(true, `level-${user.id}.png`);
+
+channel.send({ files: [file] });
+```
+
+### Ejemplo:
+
+<img src="https://i.imgur.com/GWAsObM.png" height="200px"/>
+
+## Ping
 
 ```javascript
 const { Ping } = require('image-djs');
@@ -39,7 +63,7 @@ const file = await new Ping()
 channel.send({ files: [file] });
 ```
 
-#### Ejemplo:
+### Ejemplo:
 
 <img src="https://i.imgur.com/zkqoQ3w.png" height="200px"/>
 
