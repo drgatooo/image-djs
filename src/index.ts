@@ -1,10 +1,7 @@
-const Welcomer = require('./Classes/Welcomer');
-const Ping = require('./Classes/Ping');
-const Rank = require('./Classes/Rank');
-const { registerFont } = require('canvas');
-const { join } = require('path');
+import { join } from 'path';
+import { registerFont } from 'canvas';
 
-const owo = () => {
+function main() {
 	registerFont(join(__dirname, '..', 'assets', 'DejaVuSansCondensed-Bold.ttf'), {
 		family: 'DejaVu Sans',
 		weight: 'bold',
@@ -23,10 +20,14 @@ const owo = () => {
 	registerFont(join(__dirname, '..', 'assets', 'arial-unicode-ms.ttf'), {
 		family: 'Arial Unicode MS'
 	});
+}
+
+main();
+
+export * from './struct/Ping';
+export * from './struct/Rank';
+export * from './struct/Welcomer';
+export const amazingFunction = () => {
+	console.log('bye');
+	process.exit(0);
 };
-
-owo();
-
-module.exports.Welcomer = Welcomer;
-module.exports.Ping = Ping;
-module.exports.Rank = Rank;
