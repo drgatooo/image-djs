@@ -39,7 +39,6 @@ const file = await new Rank()
 	.setLevel(2)
 	.setRank(1)
 	.setRequiredXP(150)
-	.setTextXPNeeded('{current}/{needed} xp')
 	.setUsername('drgato.ml')
 	.setXP(120)
 	.buildImage(true, `level-${user.id}.png`);
