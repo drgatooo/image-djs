@@ -79,7 +79,7 @@ export class Rank {
 		if (typeof avatarRoundStyle != 'string' && typeof avatarRoundStyle != 'number')
 			throw new TypeError('AvatarRoundStyle must be a string or number.');
 
-		const validAvatarRoundStyles = ['circle', 'rounded', 'square'];
+		const validAvatarRoundStyles = ['circle', 'roundedSquare', 'square'];
 		if (typeof avatarRoundStyle == 'string' && !validAvatarRoundStyles.includes(avatarRoundStyle))
 			throw new TypeError('AvatarRoundStyle must be a valid AvatarRoundStyle.');
 
