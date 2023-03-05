@@ -196,7 +196,7 @@ export class Rank {
 		if (!this.rank) throw new Error('Rank is not set.');
 		if (!this.requiredXP) throw new Error('RequiredXP is not set.');
 		if (!this.username) throw new Error('Username is not set.');
-		if (!this.xp) throw new Error('XP is not set.');
+		if (this.xp !== 0 && !this.xp) throw new Error('XP is not set.');
 
 		const canvas = createCanvas(1080, 400);
 		const ctx = canvas.getContext('2d');
