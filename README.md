@@ -1,13 +1,15 @@
 # 🎨 Image DJS
 
-> ¡Un generador de imágenes para discord.js!
+¡Un generador de imágenes para discord.js!
+
+> ADVERTENCIA: Si va a usar este módulo para versiones de discord.js inferiores a la v14 recuerde cambiar los parámetros de la función .render
 
 ## Welcome
 
 ```javascript
 const { Welcomer } = require('image-djs');
 // typescript: import { Welcomer } from 'image-djs';
-const file = await new Welcomer()
+const wlc = await new Welcomer()
 	.setAvatar(
 		'https://cdn.discordapp.com/avatars/742460533818654791/6464bafb21a43c243867fa090642dacb.png?size=4096'
 	)
@@ -17,8 +19,17 @@ const file = await new Welcomer()
 	// .setUserFont('52px "Segoe UI"') | Debes cargar una fuente personalizada con canvas
 	// .setSubtitleFont('32px "Segoe UI"') | Debes cargar una fuente personalizada con canvas
 	.setSubtitle('👋 Bienvenido al servidor')
-	.setUsername('drgato#0001')
-	.build(true, 'welcomer-xd.png');
+	.setUsername('drgato#0001');
+
+// para discord.js v14
+const attachment = await wlc.render(true, `welcomer-${user.id}.png`);
+channel.send({ files: [attachment] });
+
+// para discord.js v13
+const buffer = await wlc.render(false);
+const attachment = new MessageAttachment(buffer, `welcomer-${user.id}.png`);
+
+channel.send({ files: [attachment] });
 
 channel.send({ files: [file] });
 ```
@@ -33,7 +44,7 @@ channel.send({ files: [file] });
 const { Rank } = require('image-djs');
 // typescript: import { Rank } from 'image-djs';
 
-const file = await new Rank()
+const rank = new Rank()
 	.setBackground(
 		'https://cdn.discordapp.com/banners/742460533818654791/2d15dbfefbabcc7dcc6d022eb6406522.png?size=4096'
 	)
@@ -52,10 +63,17 @@ const file = await new Rank()
 	.setNextLevelTemplate('Next level: {requiredXP}')
 	.setUsername('drgato#0001')
 	.setXp(1240)
-	.setBadges(['HypeSquadBravery', 'ActiveDeveloper', 'Nitro', 'Booster24'])
-	.buildImage(true, `level-${user.id}.png`);
+	.setBadges(['HypeSquadBravery', 'ActiveDeveloper', 'Nitro', 'Booster24']);
 
-channel.send({ files: [file] });
+// para discord.js v14
+const attachment = await rank.render(true, `rank-${user.id}.png`);
+channel.send({ files: [attachment] });
+
+// para discord.js v13
+const buffer = await rank.render(false);
+const attachment = new MessageAttachment(buffer, `rank-${user.id}.png`);
+
+channel.send({ files: [attachment] });
 ```
 
 ### Ejemplo:

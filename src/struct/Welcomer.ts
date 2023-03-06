@@ -1,4 +1,4 @@
-import { AttachmentBuilder } from 'discord.js';
+import { AttachmentBuilder } from '../utils/AttachmentBuilder';
 import { createCanvas, loadImage } from 'canvas';
 import { cover } from './Cover';
 import { join } from 'path';

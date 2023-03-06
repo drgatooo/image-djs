@@ -1,5 +1,5 @@
 import { createCanvas, loadImage } from 'canvas';
-import { AttachmentBuilder } from 'discord.js';
+import { AttachmentBuilder } from '../utils/AttachmentBuilder';
 import { join } from 'path';
 
 export class Ping {

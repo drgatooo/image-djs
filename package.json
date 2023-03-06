@@ -1,6 +1,6 @@
 {
 	"name": "image-djs",
-	"version": "3.0.0",
+	"version": "3.0.3",
 	"description": "¡Generador de imagenes para tu bot de Discord!",
 	"main": "./dist/index.js",
 	"typings": "./types/index.d.ts",
@@ -23,7 +23,6 @@
 	"license": "MIT",
 	"dependencies": {
 		"canvas": "^2.11.0",
-		"discord.js": "^14.6.0",
 		"tslib": "^2.4.0"
 	},
 	"devDependencies": {
