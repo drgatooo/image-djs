@@ -34,12 +34,11 @@ const { Rank } = require('image-djs');
 const file = await new Rank()
 	.setAvatar(user.displayAvatarURL({ format: 'png' }))
 	.setBackground('https://i.pinimg.com/originals/0a/1b/73/0a1b7398d03982682d8884cba21f6eb6.jpg')
-	.setAvatarRoundType('rounded square')
+	.setAvatarRoundType('roundedSquare')
 	.setBoxColor('#292a36')
 	.setLevel(2)
 	.setRank(1)
 	.setRequiredXP(150)
-	.setTextXPNeeded('{current}/{needed} xp')
 	.setUsername('drgato.ml')
 	.setXP(120)
 	.buildImage(true, `level-${user.id}.png`);
