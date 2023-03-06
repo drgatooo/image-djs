@@ -9,7 +9,8 @@
 ```javascript
 const { Welcomer } = require('image-djs');
 // typescript: import { Welcomer } from 'image-djs';
-const wlc = await new Welcomer()
+
+const wlc = new Welcomer()
 	.setAvatar(
 		'https://cdn.discordapp.com/avatars/742460533818654791/6464bafb21a43c243867fa090642dacb.png?size=4096'
 	)
@@ -30,8 +31,6 @@ const buffer = await wlc.render(false);
 const attachment = new MessageAttachment(buffer, `welcomer-${user.id}.png`);
 
 channel.send({ files: [attachment] });
-
-channel.send({ files: [file] });
 ```
 
 ### Ejemplo:
@@ -85,11 +84,20 @@ channel.send({ files: [attachment] });
 ```javascript
 const { Ping } = require('image-djs');
 // typescript: import { Ping } from 'image-djs';
-const file = await new Ping()
-	.setIcon('https://i1.sndcdn.com/avatars-twM1pq6gSk4YzN4F-N4zKuw-t500x500.jpg')
-	.build(true, 'ping.png');
 
-channel.send({ files: [file] });
+const ping = new Ping().setIcon(
+	'https://i1.sndcdn.com/avatars-twM1pq6gSk4YzN4F-N4zKuw-t500x500.jpg'
+);
+
+// para discord.js v14
+const attachment = await ping.render(true, `ping-${user.id}.png`);
+channel.send({ files: [attachment] });
+
+// para discord.js v13
+const buffer = await ping.render(false);
+const attachment = new MessageAttachment(buffer, `ping-${user.id}.png`);
+
+channel.send({ files: [attachment] });
 ```
 
 ### Ejemplo:
