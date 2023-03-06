@@ -1,6 +1,6 @@
 import { AttachmentBuilder } from 'discord.js';
-import cover from 'canvas-image-cover';
 import { createCanvas, loadImage } from 'canvas';
+import { cover } from './Cover';
 import { join } from 'path';
 
 export class Welcomer {
@@ -9,11 +9,12 @@ export class Welcomer {
 	background: string | Buffer = join(__dirname, '..', '..', 'assets', 'RankBG.jpg');
 	borderColor: string | undefined;
 	fonts: { title: string; subtitle: string } = {
-		title: 'bold 52px "DejaVu Sans Condensed", "Arial Unicode MS", segoe-ui-emoji, Sans',
-		subtitle: 'bold 32px "DejaVu Sans Condensed", "Arial Unicode MS", segoe-ui-emoji, Sans'
+		title: 'bold 52px Poppins, "DejaVu Sans Condensed", "Arial Unicode MS", segoe-ui-emoji, Sans',
+		subtitle: '28px Poppins, "DejaVu Sans Condensed", "Arial Unicode MS", segoe-ui-emoji, Sans'
 	};
 	subtitle: string = 'Welcome to the server!';
 	username!: string;
+	borderAlpha: number = 1;
 	public constructor(options?: WelcomerOptions) {
 		if (options) this.setup(options);
 	}
@@ -71,14 +72,20 @@ export class Welcomer {
 		return this;
 	}
 
-	public setBorderColor(borderColor: `#${string}`) {
+	public setBorderColor(borderColor: `#${string}`, borderAlpha: number = 1) {
 		if (typeof borderColor != 'string') throw new TypeError('Border color must be a string.');
+		if (typeof borderAlpha != 'number') throw new TypeError('Border alpha must be a number.');
 
 		if (!/^#[0-9a-f]{6}$/i.test(borderColor)) {
 			throw new TypeError('Border color must be a valid hex color.');
 		}
 
+		if (borderAlpha < 0 || borderAlpha > 1) {
+			throw new RangeError('Border alpha must be between 0 and 1.');
+		}
+
 		this.borderColor = borderColor;
+		this.borderAlpha = borderAlpha;
 		return this;
 	}
 
@@ -138,11 +145,11 @@ export class Welcomer {
 
 		if (this.borderColor) {
 			ctx.fillStyle = this.borderColor;
-			ctx.globalAlpha = 0.5;
-			ctx.fillRect(0, 0, 25, canvas.height);
-			ctx.fillRect(canvas.width - 25, 0, 25, canvas.height);
-			ctx.fillRect(25, 0, canvas.width - 50, 25);
-			ctx.fillRect(25, canvas.height - 25, canvas.width - 50, 25);
+			ctx.globalAlpha = this.borderAlpha;
+			ctx.fillRect(0, 0, 20, canvas.height);
+			ctx.fillRect(canvas.width - 20, 0, 20, canvas.height);
+			ctx.fillRect(20, 0, canvas.width - 40, 25);
+			ctx.fillRect(20, canvas.height - 20, canvas.width - 40, 20);
 			ctx.globalAlpha = 1;
 		} else ctx.fillStyle = '#ffffff';
 
@@ -155,7 +162,8 @@ export class Welcomer {
 
 		ctx.font = this.fonts.title;
 		ctx.fillStyle = 'white';
-		ctx.fillText(`${this.username}`, 375, 300, 500);
+		ctx.fillText(this.username, 375, 300, 500);
+
 		ctx.font = this.fonts.subtitle;
 		ctx.fillText(this.subtitle || 'Welcome to the server!', 375, 345, 500);
 

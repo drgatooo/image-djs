@@ -1,6 +1,7 @@
-import { createCanvas, loadImage } from 'canvas';
-import { AttachmentBuilder } from 'discord.js';
-import cover from 'canvas-image-cover';
+import { CanvasRenderingContext2D, createCanvas, loadImage } from 'canvas';
+import { AttachmentBuilder } from '../utils/AttachmentBuilder';
+import { cover } from './Cover';
+import { badges, dot } from '../badges';
 import { join } from 'path';
 
 export class Rank {
@@ -12,12 +13,13 @@ export class Rank {
 	level!: number;
 	levelBarBackground: `#${string}` = '#ffffff';
 	levelBarFill: `#${string}` = '#ffffff';
-	nextLevelTemplate: string = 'Next Level: {nextLevel}';
+	nextLevelTemplate: string = 'Next Level: {requiredXP}';
 	rank!: number;
 	requiredXP!: number;
 	textXpTemplate: string = 'XP: {current}/{needed}';
 	username!: string;
 	xp!: number;
+	userFlags: Array<Buffer> = [];
 
 	public constructor(options?: Partial<RankOptions>) {
 		if (options) this.setup(options);
@@ -67,6 +69,27 @@ export class Rank {
 		if (options.xp) {
 			this.setXp(options.xp);
 		}
+		if (options.badges) {
+			this.setBadges(options.badges);
+		}
+	}
+
+	public setBadges(userFlags: Array<keyof typeof badges | Buffer>) {
+		if (!userFlags) throw new Error('No user flags provided.');
+		if (!Array.isArray(userFlags)) throw new TypeError('User flags must be an array.');
+
+		if (userFlags.some(flag => typeof flag != 'string' && !Buffer.isBuffer(flag))) {
+			throw new TypeError('User flags must be an array of badge keys or buffers.');
+		}
+
+		if (userFlags.length > 10) {
+			console.warn('WARN! User flags must be an array of 10 or less keys or buffers.');
+		}
+
+		this.userFlags = userFlags.map(flag =>
+			typeof flag == 'string' ? Buffer.from(badges[flag], 'base64') : flag
+		);
+		return this;
 	}
 
 	public setAvatar(avatar: string) {
@@ -85,7 +108,7 @@ export class Rank {
 
 		switch (avatarRoundStyle) {
 			case 'circle':
-				this.avatarRoundStyle = 50;
+				this.avatarRoundStyle = 100;
 				break;
 
 			case 'roundedSquare':
@@ -151,8 +174,7 @@ export class Rank {
 
 	public setNextLevelTemplate(template: string) {
 		if (typeof template != 'string') throw new TypeError('Template must be a string.');
-		if (!template.includes('{rqeuiredXP}'))
-			throw new TypeError('Template must include {rqeuiredXP}.');
+
 		this.nextLevelTemplate = template;
 		return this;
 	}
@@ -189,14 +211,16 @@ export class Rank {
 		return this;
 	}
 
-	public async render(toAttachment: true, attachmentName?: string): Promise<AttachmentBuilder>;
+	public async render(toAttachment: true, attachmentName: string): Promise<AttachmentBuilder>;
 	public async render(toAttachment: false, attachmentName?: string): Promise<Buffer>;
 	public async render(toAttachment: boolean, attachmentName?: string) {
-		if (!this.level) throw new Error('Level is not set.');
-		if (!this.rank) throw new Error('Rank is not set.');
-		if (!this.requiredXP) throw new Error('RequiredXP is not set.');
-		if (!this.username) throw new Error('Username is not set.');
-		if (this.xp !== 0 && !this.xp) throw new Error('XP is not set.');
+		if (typeof this.level != 'number') throw new Error('Level is not set.');
+		if (typeof this.rank != 'number') throw new Error('Rank is not a valid number.');
+		if (typeof this.requiredXP != 'number') throw new Error('RequiredXP is not a valid number.');
+		if (typeof this.username != 'string') throw new Error('Username is not a valid string.');
+		if (typeof this.xp != 'number') throw new Error('XP is not a valid number.');
+
+		const upY = this.userFlags?.length ? 10 : -20;
 
 		const canvas = createCanvas(1080, 400);
 		const ctx = canvas.getContext('2d');
@@ -222,7 +246,8 @@ export class Rank {
 		const background = await loadImage(this.background);
 		cover(background, 0, 0, 1080, 400).render(ctx);
 
-		ctx.fillStyle = '#00000066';
+		ctx.fillStyle = '#000000';
+		ctx.globalAlpha = 0.7;
 		ctx.textAlign = 'center';
 		ctx.fillRect(0, 0, 1080, 400);
 
@@ -251,14 +276,11 @@ export class Rank {
 		ctx.globalAlpha = 1;
 		ctx.fillRect(40 + 30, 30 + 180 + 30, 180, 50);
 		ctx.globalAlpha = 1;
-		ctx.fillStyle = '#ffffff';
-		ctx.font = 'bold 32px "DejaVu Sans Condensed", "Arial Unicode MS", segoe-ui-emoji, Sans';
+		ctx.fillStyle = this.isLight(this.boxColor) ? '#000000' : '#ffffff';
+		ctx.font =
+			'medium 28px Poppins, "DejaVu Sans Condensed", "Arial Unicode MS", segoe-ui-emoji, Sans';
 		ctx.textAlign = 'center';
-		ctx.fillText(
-			'Lvl: ' + this.abbreviateNumber(this.level),
-			40 + 30 + 180 / 2,
-			30 + 180 + 30 + 38
-		);
+		ctx.fillText(`Lvl ${this.abbreviateNumber(this.level)}`, 40 + 30 + 180 / 2, 30 + 180 + 30 + 35);
 		ctx.restore();
 
 		ctx.save();
@@ -270,13 +292,14 @@ export class Rank {
 		ctx.globalAlpha = 1;
 		ctx.fillRect(40 + 30, 30 + 180 + 30 + 50 + 30, 180, 50);
 		ctx.globalAlpha = 1;
-		ctx.fillStyle = '#ffffff';
-		ctx.font = 'bold 32px "DejaVu Sans Condensed", "Arial Unicode MS", segoe-ui-emoji, Sans';
+		ctx.fillStyle = this.isLight(this.boxColor) ? '#000000' : '#ffffff';
+		ctx.font =
+			'medium 28px Poppins, "DejaVu Sans Condensed", "Arial Unicode MS", segoe-ui-emoji, Sans';
 		ctx.textAlign = 'center';
 		ctx.fillText(
-			'XP: ' + this.abbreviateNumber(this.xp),
+			`${this.abbreviateNumber(this.xp)} XP`,
 			40 + 30 + 180 / 2,
-			30 + 180 + 30 + 30 + 50 + 38
+			30 + 180 + 30 + 30 + 50 + 35
 		);
 		ctx.restore();
 
@@ -287,8 +310,9 @@ export class Rank {
 		ctx.shadowBlur = 15;
 		ctx.shadowOffsetX = 1;
 		ctx.shadowOffsetY = 1;
-		ctx.font = 'bold 40px "DejaVu Sans Condensed", "Arial Unicode MS", segoe-ui-emoji, Sans';
-		ctx.fillText(this.username, 390, 180 - 10);
+		ctx.font =
+			'bold 40px Poppins, "DejaVu Sans Condensed", "Arial Unicode MS", segoe-ui-emoji, Sans';
+		ctx.fillText(this.username, 390, 170 - upY);
 		ctx.restore();
 
 		ctx.save();
@@ -298,31 +322,31 @@ export class Rank {
 		ctx.shadowBlur = 15;
 		ctx.shadowOffsetX = 1;
 		ctx.shadowOffsetY = 1;
-		ctx.font = 'bold 50px "DejaVu Sans Condensed", "Arial Unicode MS", segoe-ui-emoji, Sans';
-		ctx.fillText('#' + this.rank, canvas.width - 50 - 5, 180 - 10);
+		ctx.font =
+			'bold 50px Poppins, "DejaVu Sans Condensed", "Arial Unicode MS", segoe-ui-emoji, Sans';
+		ctx.fillText('#' + this.rank, canvas.width - 45, 170 - upY);
 		ctx.restore();
 
 		ctx.save();
-		this.roundedBox(ctx, 390, 245 - 50, 660, 50, this.barRadius);
+		this.roundedBox(ctx, 390, 195 - upY, 660, 30, this.barRadius);
 		ctx.strokeStyle = '#BFC85A22';
 		ctx.stroke();
 		ctx.clip();
 		ctx.fillStyle = this.levelBarBackground;
-		ctx.globalAlpha = 0.2;
-		ctx.fillRect(390, 245 - 50, 660, 50);
+		ctx.globalAlpha = 0.3;
+		ctx.fillRect(390, 195 - upY, 660, 30);
 		ctx.restore();
 
 		const percent = (100 * this.xp) / this.requiredXP;
 		const progress = (percent * 660) / 100;
 
 		ctx.save();
-		this.roundedBox(ctx, 390, 245 - 50, progress, 50, this.barRadius);
+		this.roundedBox(ctx, 390, 195 - upY, progress, 30, this.barRadius);
 		ctx.strokeStyle = '#BFC85A22';
 		ctx.stroke();
 		ctx.clip();
 		ctx.fillStyle = this.levelBarFill;
-		ctx.globalAlpha = 0.5;
-		ctx.fillRect(390, 245 - 50, progress, 50);
+		ctx.fillRect(390, 195 - upY, progress, 30);
 		ctx.restore();
 
 		const nextLevelText = this.nextLevelTemplate.replaceAll(
@@ -334,8 +358,9 @@ export class Rank {
 		ctx.textAlign = 'left';
 		ctx.fillStyle = '#ffffff';
 		ctx.globalAlpha = 0.8;
-		ctx.font = 'bold 30px "DejaVu Sans Condensed", "Arial Unicode MS", segoe-ui-emoji, Sans';
-		ctx.fillText(nextLevelText, 390, 330 - 50);
+		ctx.font =
+			'medium 25px Poppins, "DejaVu Sans Condensed", "Arial Unicode MS", segoe-ui-emoji, Sans';
+		ctx.fillText(nextLevelText, 390, 260 - upY);
 		ctx.restore();
 
 		const latestXP = this.xp - this.requiredXP;
@@ -344,15 +369,45 @@ export class Rank {
 			.replace(/{current}/g, `${this.abbreviateNumber(this.xp)}`)
 			.replace(/{latest}/g, `${this.abbreviateNumber(latestXP)}`);
 
-		ctx.textAlign = 'center';
-		ctx.fillStyle = '#313338';
+		ctx.textAlign = 'right';
+		ctx.fillStyle = '#ffffff';
 		ctx.globalAlpha = 1;
-		ctx.font = 'bold 30px "DejaVu Sans Condensed", "Arial Unicode MS", segoe-ui-emoji, Sans';
-		ctx.fillText(textXPEdited, 730, 280 - 50);
+		ctx.font =
+			'medium 25px Poppins, "DejaVu Sans Condensed", "Arial Unicode MS", segoe-ui-emoji, Sans';
+		ctx.fillText(textXPEdited, 660 + 390, 260 - upY);
+
+		if (this.userFlags?.length) {
+			const badges = await Promise.all(this.userFlags.slice(0, 10).map(flag => loadImage(flag)));
+			if (badges.length < 10) {
+				const more = await loadImage(Buffer.from(dot, 'base64'));
+				for (let i = badges.length; i < 10; i++) badges.push(more);
+			}
+
+			const coords = {
+				x: 400,
+				y: 298
+			};
+
+			for (let i = 0; i < badges.length; i++) {
+				ctx.drawImage(badges[i]!, coords.x, coords.y, 50, 50);
+				coords.x += badges[i]!.width + 5;
+			}
+		}
 
 		if (toAttachment == true)
 			return new AttachmentBuilder(canvas.toBuffer(), { name: attachmentName || 'ping.png' });
 		else return canvas.toBuffer();
+	}
+
+	private isLight(color: string) {
+		const c = color.substring(1); // strip #
+		const rgb = parseInt(c, 16); // convert rrggbb to decimal
+		const r = (rgb >> 16) & 0xff; // extract red
+		const g = (rgb >> 8) & 0xff; // extract green
+		const b = (rgb >> 0) & 0xff; // extract blue
+		const luma = 0.2126 * r + 0.7152 * g + 0.0722 * b; // per ITU-R BT.709
+
+		return luma > 40;
 	}
 
 	private roundedBox(
@@ -419,6 +474,8 @@ interface RankOptions {
 	textXpTemplate: string;
 	/** Next level text template. Example: "Next level: {requiredXP}" */
 	nextLevelTemplate: string;
+	/** Provide badge keys or custom badge buffers for the user */
+	badges?: Array<keyof typeof badges | Buffer>;
 }
 
 type AvatarRoundStyle = 'circle' | 'square' | 'roundedSquare' | number;

@@ -1,7 +1,7 @@
 import { join } from 'path';
 import { registerFont } from 'canvas';
 
-function main() {
+void (function main() {
 	registerFont(join(__dirname, '..', 'assets', 'DejaVuSansCondensed-Bold.ttf'), {
 		family: 'DejaVu Sans',
 		weight: 'bold',
@@ -20,9 +20,17 @@ function main() {
 	registerFont(join(__dirname, '..', 'assets', 'arial-unicode-ms.ttf'), {
 		family: 'Arial Unicode MS'
 	});
-}
 
-main();
+	registerFont(join(__dirname, '..', 'assets', 'Poppins-Bold.ttf'), {
+		family: 'Poppins',
+		weight: 'bold'
+	});
+
+	registerFont(join(__dirname, '..', 'assets', 'Poppins-Medium.ttf'), {
+		family: 'Poppins',
+		weight: 'medium'
+	});
+})();
 
 export * from './struct/Ping';
 export * from './struct/Rank';
